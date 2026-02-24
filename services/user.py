@@ -1,7 +1,5 @@
-from django.db.models import QuerySet
 from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from django.contrib.auth.base_user import AbstractBaseUser
 
 
 def create_user(
@@ -11,7 +9,9 @@ def create_user(
         first_name: str = None,
         last_name: str = None
 ) -> None:
-    User.objects.create_user(
+    user_model = get_user_model()
+
+    user_model.objects.create_user(
         username=username,
         password=password,
         email=email or "",
@@ -20,8 +20,9 @@ def create_user(
     )
 
 
-def get_user(user_id: int) -> None:
-    return User.objects.get(id=user_id)
+def get_user(user_id: int) -> AbstractBaseUser:
+    user_model = get_user_model()
+    return user_model.objects.get(id=user_id)
 
 
 def update_user(
@@ -32,7 +33,7 @@ def update_user(
         first_name: str = None,
         last_name: str = None
 ) -> None:
-    user = User.objects.get(id=user_id)
+    user = get_user(user_id)
     if username is not None:
         user.username = username
     if password:

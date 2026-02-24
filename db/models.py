@@ -64,6 +64,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        related_name="orders",
         on_delete=models.CASCADE
     )
 
@@ -77,10 +78,12 @@ class Order(models.Model):
 class Ticket(models.Model):
     movie_session = models.ForeignKey(
         MovieSession,
+        related_name="tickets",
         on_delete=models.CASCADE
     )
     order = models.ForeignKey(
         Order,
+        related_name="tickets",
         on_delete=models.CASCADE
     )
     row = models.IntegerField()
@@ -105,7 +108,7 @@ class Ticket(models.Model):
         if not (1 <= self.row <= self.movie_session.cinema_hall.rows):
             raise ValidationError({
                 "row": f"row number must be in available range: "
-                       f"(1, rows): (1, {rows})"
+                f"(1, rows): (1, {rows})"
             })
         if not (1 <= self.seat <= self.movie_session.cinema_hall.seats_in_row):
             raise ValidationError({
