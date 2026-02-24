@@ -10,7 +10,7 @@ from db.models import Order, Ticket, MovieSession
 def create_order(
         tickets: list,
         username: str,
-        date: datetime = None
+        date: str = None
 ) -> Order:
     user_model = get_user_model()
 
